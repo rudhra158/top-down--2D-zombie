@@ -4,31 +4,19 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using DG.Tweening;
 
 public class lens : MonoBehaviour
 {
     public Volume volume;
 
-    bool distort = false;
+    public float timedrunk = 10f;
 
-    // Start is called before the first frame update
-    void Start()
+
+    private void Update()
     {
 
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (distort)
-        {
-            if (volume.profile.TryGet(out LensDistortion lens))
-            {
-                float tempVal = lens.intensity.value;
-                tempVal *= Time.deltaTime;
-               // lens.intensity.value = tempVal;
-            }
-        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -40,16 +28,28 @@ public class lens : MonoBehaviour
 
                 if (volume.profile.TryGet(out LensDistortion lens))
                 {
-                    for (float i = 0; i < 10; i++)
+                    //Destroy(gameObject);
+                    lens.intensity.value = -0.5f;
+                    DOTween.To(() => lens.intensity.value, x => lens.intensity.value = x, 0.5f, 5f).SetLoops(6, LoopType.Yoyo).OnComplete(() =>
                     {
-                        distort = true;
-                        lens.intensity.value = Random.Range(-0.99f, 0.99f);
-                    }
+                        print("Tween Ended");
+                        lens.intensity.value = 0f;
+                    });
                 }
-               //Destroy(gameObject);
+
+                if (volume.profile.TryGet(out MotionBlur blur))
+                {
+                    DOTween.To(() => blur.intensity.value, x => blur.intensity.value = x, 0.6f, 30f).OnComplete(() =>
+                    {
+                        print("mtewwnend");
+                        blur.intensity.value = 0f;  
+                    });
+
+                }
 
             }
         }
     }
+    
 }
 

@@ -16,7 +16,7 @@ public class playerscript : MonoBehaviour
     public Vector2 mouseposition;
     public Rigidbody2D rb;
     Vector2 direction;
-    public float rotation = 90f;
+    public float rotation = 0f;
     
 
     
@@ -38,7 +38,15 @@ public class playerscript : MonoBehaviour
        
         direction = new Vector2(moveX, moveY).normalized;
         mouseposition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-      
+      if(Input.GetKeyDown(KeyCode.C))
+
+        {
+            speed = 2 + speed;
+        }
+      if(Input.GetKeyUp(KeyCode.C))
+        {
+            speed -= 2;
+        }
        
 
     }
